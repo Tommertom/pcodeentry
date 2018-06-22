@@ -5,13 +5,81 @@
 </ion-header>
 
 <ion-content padding>
-  <h2>Welcome to Ionic!</h2>
-  <p>
-    This starter project comes with simple tabs-based layout for apps
-    that are going to primarily use a Tabbed UI.
-  </p>
-  <p>
-    Take a look at the <code>src/pages/</code> directory to add or change tabs,
-    update any existing page or create new pages.
-  </p>
+
+   <ion-list *ngIf="apiKey==''">
+      <ion-item>
+        <ion-label fixed>API key</ion-label>
+        <ion-input type="text" [(ngModel)]="apiKey" (ionBlur)="setApiKey()"></ion-input>
+      </ion-item>
+   </ion-list>
+<hr>
+<button ion-button (click)="clearCards()">Clear all cards</button>
+<button ion-button (click)="exportCards()">Export cards</button>
+
+<br>
+  <textarea style="width:100%" row=1 id="copyTarget" [value]="txtToCopy"></textarea><br>
+  <button id="cpyBtn" ion-button data-clipboard-target="#copyTarget">Copy to clipboard</button>
+<br>
+<hr>
+
+  <ion-card *ngFor="let card of cards;let i=index">
+
+    <ion-card-header>{{i}}</ion-card-header>
+    <ion-list>
+      <ion-item>
+        <ion-label fixed>Voornaam</ion-label>
+        <ion-input type="text" [(ngModel)]="card.voornaam" (ionBlur)="voornaamChange(card.voornaam, card)"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label fixed>Tussen</ion-label>
+        <ion-input type="text" [(ngModel)]="card.tussen"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label fixed>Achternaam</ion-label>
+        <ion-input type="text" [(ngModel)]="card.achternaam"></ion-input>
+      </ion-item>
+
+
+      <ion-item>
+        <ion-label fixed>Initialen</ion-label>
+        <ion-input type="text" [(ngModel)]="card.initialen"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label fixed>Huisnummer</ion-label>
+        <ion-input type="text" [(ngModel)]="card.huisnummer"></ion-input>
+      </ion-item>
+
+
+      <ion-item>
+        <ion-label fixed>Postcode</ion-label>
+        <ion-input type="text" [(ngModel)]="card.postcode" (ionBlur)="postcodeCheck(card)"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label fixed>Email</ion-label>
+        <ion-input type="text" [(ngModel)]="card.email"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label fixed>Telnr</ion-label>
+        <ion-input type="text" [(ngModel)]="card.telnr"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label fixed>Straatnaam</ion-label>
+        <ion-input type="text" [(ngModel)]="card.straatnaam" (ionBlur)="saveStuff()"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label fixed>Plaats</ion-label>
+        <ion-input type="text" [(ngModel)]="card.plaats"></ion-input>
+      </ion-item>
+    </ion-list>
+  </ion-card>
+
+<button ion-button (click)="addHundred()">Add hundred cards</button>
+
 </ion-content>

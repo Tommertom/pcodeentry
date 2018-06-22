@@ -1,5 +1,11 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, AlertController, ToastController } from 'ionic-angular';
+
+import { Storage } from '@ionic/storage';
+import { Http, Headers, RequestOptions } from "@angular/http";
+import 'rxjs/add/operator/map';
+
+import * as Clipboard from 'clipboard/dist/clipboard.min.js';
 
 @Component({
   selector: 'page-home',
@@ -7,8 +13,158 @@ import { NavController } from 'ionic-angular';
 })
 export class HomePage {
 
-  constructor(public navCtrl: NavController) {
+  apiKey: string = "";
+  txtToCopy: string = "";
+  cards: Array<Object> = [];
+  clipboard: any;
+  constructor(public toastCtrl: ToastController, private alertCtrl: AlertController, public navCtrl: NavController, private storage: Storage, private http: Http) {
+    this.getStuff();
+  }
 
+  ionViewDidEnter() {
+    this.clipboard = new Clipboard('#cpyBtn');
+    this.clipboard.on('success', () => { this.showMsg() });
+  }
+
+  showMsg() {
+    let toast = this.toastCtrl.create({
+      message: 'Its copied to clipboard',
+      duration: 3000,
+      position: 'top'
+    });
+    toast.present();
+  }
+
+
+
+  exportCards() {
+    let quote = '"';
+
+    function csvCell(txt) {
+      return '"' + txt + '",';
+    }
+
+    this.txtToCopy = "";
+    this.cards.map(card => {
+
+      if (card['plaats'] != "")
+        this.txtToCopy +=
+          csvCell(card['initialen']) +
+          csvCell(card['voornaam']) +
+          csvCell(card['tussen']) +
+          csvCell(card['achternaam']) +
+          csvCell(card['straatnaam']) +
+          csvCell(card['huisnummer']) +
+          csvCell(card['postcode']) +
+          csvCell(card['plaats']) +
+          csvCell(card['email']) +
+          quote + card['telnr'] + quote + "\n";
+    })
+  }
+
+  voornaamChange(voornaam, card) {
+    card.initialen = voornaam.charAt(0) + '.';
+  }
+
+
+  clearCards() {
+    let confirm = this.alertCtrl.create({
+      title: 'Clear cards',
+      message: 'U sure?',
+      buttons: [
+        {
+          text: 'Disagree',
+          handler: () => {
+            console.log('Disagree clicked');
+          }
+        },
+        {
+          text: 'Agree',
+          handler: () => {
+            console.log('Agree clicked');
+            this.cards = [];
+            this.addHundred();
+            this.saveStuff();
+          }
+        }
+      ]
+    });
+    confirm.present()
+  }
+
+  postcodeCheck(card) {
+
+    let headers = new Headers({ 'X-Api-Key': this.apiKey });
+    let postcode = card['postcode'].replace(/ /g, '').toUpperCase();
+    let number = card['huisnummer']
+    let url = "https://api.postcodeapi.nu/v2/addresses/?postcode=" + postcode + "&number=" + number;
+
+
+    this.http.get(url, new RequestOptions({ headers: headers }))
+      .map(res => res.json())
+      .map(res => res['_embedded'])
+      .map(res => res['addresses'][0])
+      .subscribe(data => {
+        let city = data['city']['label'];
+        let street = data['street']
+        card['straatnaam'] = street;
+        card['plaats'] = city;
+        console.log('DATA', data)
+      }, () => {
+        console.log('GAAT NIET WERKEN')
+      })
+
+    // and clean postcode
+    card['postcode'] = postcode.substring(0, 4) + ' ' + postcode.slice(-2);
+
+  }
+
+
+  saveStuff() {
+    this.storage.set('stuff', this.cards);
+    console.log('Saved');
+  }
+
+  setApiKey() {
+    if (this.apiKey.length > 0) {
+      console.log('Saving api key', this.apiKey)
+      this.storage.set('apiKey', this.apiKey)
+    }
+  }
+
+  getStuff() {
+
+    this.storage.get('apiKey').then((val) => {
+      if (val) {
+        this.apiKey = val;
+
+        console.log('Found api key', this.apiKey)
+      }
+
+    });
+
+    this.storage.get('stuff').then((val) => {
+      if (val) this.cards = val;
+      this.addHundred();
+    });
+  }
+
+  addHundred() {
+
+    while (this.cards.length < 100) {
+      this.cards.push({
+        voornaam: "",
+        tussen: "",
+        achternaam: "",
+        initialen: "",
+        postcode: "",
+        huisnummer: "",
+        email: "",
+        telnr: "",
+        straatnaam: "",
+        plaats: ""
+      })
+    }
   }
 
 }
