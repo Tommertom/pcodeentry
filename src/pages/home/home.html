@@ -5,81 +5,72 @@
 </ion-header>
 
 <ion-content padding>
+  <ion-list>
+    <ion-item>
+      <ion-label fixed>API key</ion-label>
+      <ion-input type="text" [(ngModel)]="apiKey" (ionBlur)="setApiKey()"></ion-input>
+    </ion-item>
+  </ion-list>
+  <hr>
+  <button ion-button (click)="clearCards()">Clear all cards</button>
+  <button ion-button (click)="exportCards()">Export cards</button>
 
-   <ion-list *ngIf="apiKey==''">
-      <ion-item>
-        <ion-label fixed>API key</ion-label>
-        <ion-input type="text" [(ngModel)]="apiKey" (ionBlur)="setApiKey()"></ion-input>
-      </ion-item>
-   </ion-list>
-<hr>
-<button ion-button (click)="clearCards()">Clear all cards</button>
-<button ion-button (click)="exportCards()">Export cards</button>
-
-<br>
+  <br>
   <textarea style="width:100%" row=1 id="copyTarget" [value]="txtToCopy"></textarea><br>
   <button id="cpyBtn" ion-button data-clipboard-target="#copyTarget">Copy to clipboard</button>
-<br>
-<hr>
+  <br>
+  <hr>
 
-  <ion-card *ngFor="let card of cards;let i=index">
-
-    <ion-card-header>{{i}}</ion-card-header>
-    <ion-list>
-      <ion-item>
-        <ion-label fixed>Voornaam</ion-label>
+  <ion-grid no-padding fixed>
+    <ion-row>
+      <ion-col></ion-col>
+      <ion-col>Voornaam</ion-col>
+      <ion-col>Tussen</ion-col>
+      <ion-col>Achternaam</ion-col>
+      <ion-col>Initialen</ion-col>
+      <ion-col>Huisnr</ion-col>
+      <ion-col>Postcode</ion-col>
+      <ion-col>Email</ion-col>
+      <ion-col>Telnr</ion-col>
+      <ion-col>Straat</ion-col>
+      <ion-col>Telnr</ion-col>
+    </ion-row>
+    <ion-row *ngFor="let card of cards;let i=index">
+      <ion-col>{{i+1}}</ion-col>
+      <ion-col>
         <ion-input type="text" [(ngModel)]="card.voornaam" (ionBlur)="voornaamChange(card.voornaam, card)"></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label fixed>Tussen</ion-label>
+      </ion-col>
+      <ion-col>
         <ion-input type="text" [(ngModel)]="card.tussen"></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label fixed>Achternaam</ion-label>
+      </ion-col>
+      <ion-col>
         <ion-input type="text" [(ngModel)]="card.achternaam"></ion-input>
-      </ion-item>
-
-
-      <ion-item>
-        <ion-label fixed>Initialen</ion-label>
+      </ion-col>
+      <ion-col>
         <ion-input type="text" [(ngModel)]="card.initialen"></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label fixed>Huisnummer</ion-label>
+      </ion-col>
+      <ion-col>
         <ion-input type="text" [(ngModel)]="card.huisnummer"></ion-input>
-      </ion-item>
-
-
-      <ion-item>
-        <ion-label fixed>Postcode</ion-label>
+      </ion-col>
+      <ion-col>
         <ion-input type="text" [(ngModel)]="card.postcode" (ionBlur)="postcodeCheck(card)"></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label fixed>Email</ion-label>
-        <ion-input type="text" [(ngModel)]="card.email"></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label fixed>Telnr</ion-label>
-        <ion-input type="text" [(ngModel)]="card.telnr"></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label fixed>Straatnaam</ion-label>
+      </ion-col>
+      <ion-col>
+        <ion-input type="text" [(ngModel)]="card.email" (ionChange)="emailComplete(card,$event)"></ion-input>
+      </ion-col>
+      <ion-col>
+        <ion-input type="text" [(ngModel)]="card.telnr" (ionBlur)="telNrCheck(card)"></ion-input>
+      </ion-col>
+      <ion-col>
         <ion-input type="text" [(ngModel)]="card.straatnaam" (ionBlur)="saveStuff()"></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label fixed>Plaats</ion-label>
+      </ion-col>
+      <ion-col>
         <ion-input type="text" [(ngModel)]="card.plaats"></ion-input>
-      </ion-item>
-    </ion-list>
-  </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
-<button ion-button (click)="addHundred()">Add hundred cards</button>
+
+  <button ion-button (click)="addHundred()">Add hundred cards</button>
 
 </ion-content>

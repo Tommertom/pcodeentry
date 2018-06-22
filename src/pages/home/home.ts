@@ -23,12 +23,12 @@ export class HomePage {
 
   ionViewDidEnter() {
     this.clipboard = new Clipboard('#cpyBtn');
-    this.clipboard.on('success', () => { this.showMsg() });
+    this.clipboard.on('success', () => { this.showMsg('Clipboard copied') });
   }
 
-  showMsg() {
+  showMsg(msg) {
     let toast = this.toastCtrl.create({
-      message: 'Its copied to clipboard',
+      message: msg,
       duration: 3000,
       position: 'top'
     });
@@ -66,6 +66,13 @@ export class HomePage {
     card.initialen = voornaam.charAt(0) + '.';
   }
 
+  telNrCheck(card) {
+    let telnr = card['telnr'];
+    if (telnr.substring(0, 2) == "06")
+      if (telnr.charAt(2) != '-')
+        card['telnr'] = '06' + '-' + telnr.slice(-8)
+  }
+
 
   clearCards() {
     let confirm = this.alertCtrl.create({
@@ -92,13 +99,39 @@ export class HomePage {
     confirm.present()
   }
 
+
+  emailComplete(card, event) {
+   // console.log('stuff', card);
+
+    let emails = [
+      { e: '@gma', d: '@gmail.com' },
+      { e: '@hetn', d: '@hetnet.nl' }
+      { e: '@hotm', d: '@hotmail.com' },
+      { e: '@qui', d: '@quicknet.nl' },
+      { e: '@liv', d: '@live.nl' },
+      { e: '@outl', d: '@outook.com' }
+    ]
+
+    emails.map(entry => {
+      let e = entry['e'];
+      let d = entry['d'];
+      let teste = card['email'].slice(-1 * e.length);
+      //console.log('check s ',e,d,teste)
+
+      if (teste == e) {
+       // console.log('HITT')
+        card['email']=card['email'].replace(e, d);
+      }
+    })
+
+  }
+
   postcodeCheck(card) {
 
     let headers = new Headers({ 'X-Api-Key': this.apiKey });
     let postcode = card['postcode'].replace(/ /g, '').toUpperCase();
     let number = card['huisnummer']
     let url = "https://api.postcodeapi.nu/v2/addresses/?postcode=" + postcode + "&number=" + number;
-
 
     this.http.get(url, new RequestOptions({ headers: headers }))
       .map(res => res.json())
@@ -110,13 +143,13 @@ export class HomePage {
         card['straatnaam'] = street;
         card['plaats'] = city;
         console.log('DATA', data)
-      }, () => {
-        console.log('GAAT NIET WERKEN')
+      }, (err) => {
+        console.log('GAAT NIET WERKEN',err);
+        this.showMsg('Error search postcode ')
       })
 
     // and clean postcode
     card['postcode'] = postcode.substring(0, 4) + ' ' + postcode.slice(-2);
-
   }
 
 
