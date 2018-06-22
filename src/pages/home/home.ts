@@ -105,7 +105,7 @@ export class HomePage {
 
     let emails = [
       { e: '@gma', d: '@gmail.com' },
-      { e: '@hetn', d: '@hetnet.nl' }
+      { e: '@hetn', d: '@hetnet.nl' },
       { e: '@hotm', d: '@hotmail.com' },
       { e: '@qui', d: '@quicknet.nl' },
       { e: '@liv', d: '@live.nl' },
