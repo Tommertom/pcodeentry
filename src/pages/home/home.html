@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Home</ion-title>
+    <ion-title>Home v4</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -47,7 +47,7 @@
         <ion-input type="text" [(ngModel)]="card.achternaam"></ion-input>
       </ion-col>
       <ion-col>
-        <ion-input type="text" [(ngModel)]="card.initialen"></ion-input>
+        <ion-input type="text" [(ngModel)]="card.initialen" (ionBlur)="initialenCheck(card)"></ion-input>
       </ion-col>
       <ion-col>
         <ion-input type="text" [(ngModel)]="card.huisnummer"></ion-input>

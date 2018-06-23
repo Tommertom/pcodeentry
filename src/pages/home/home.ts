@@ -38,7 +38,6 @@ export class HomePage {
   }
 
 
-
   exportCards() {
     let quote = '"';
 
@@ -49,23 +48,38 @@ export class HomePage {
     this.txtToCopy = "";
     this.cards.map(card => {
 
-      if (card['plaats'] != "")
+      if (card['plaats'] != "") {
+
+        if (typeof card['geslacht'] == 'undefined') card['geslacht'] = "";
+
         this.txtToCopy +=
           csvCell(card['voornaam']) +
           csvCell(card['initialen']) +
           csvCell(card['tussen']) +
           csvCell(card['achternaam']) +
+          csvCell(card['geslacht']) +
           csvCell(card['straatnaam']) +
           csvCell(card['huisnummer']) +
           csvCell(card['postcode']) +
           csvCell(card['plaats']) +
           csvCell(card['email']) +
           quote + card['telnr'] + quote + "\n";
+      }
     })
   }
 
   voornaamChange(voornaam, card) {
-    card.initialen = voornaam.charAt(0) + '.';
+    if (voornaam.length > 0) {
+      card.initialen = voornaam.charAt(0) + '.';
+      card['geslacht'] = 'm';
+      card['initialen'] = card['initialen'].toUpperCase();
+      // hier toevoegen: geslachtcheck
+    }
+  }
+
+  initialenCheck(card) {
+    card['initialen'] = card['initialen'].toUpperCase();
+    if (card['initialen'].length == 1) card['initialen'] += '.';
   }
 
   telNrCheck(card) {
@@ -92,6 +106,7 @@ export class HomePage {
           handler: () => {
             console.log('Agree clicked');
             this.cards = [];
+            this.txtToCopy = "";
             this.addHundred();
             this.saveStuff();
           }
@@ -145,12 +160,14 @@ export class HomePage {
           let street = data['street']
           card['straatnaam'] = street;
           card['plaats'] = city;
+          console.log('data ', data)
         }, (err) => {
-          this.showMsg('Error search postcode ')
+          this.showMsg('Error search postcode ');
+          console.log('Error ', err)
         })
 
     // and clean postcode
-    card['postcode'] = postcode.substring(0, 4) + ' ' + postcode.slice(-2);
+    card['postcode'] = postcode; //.substring(0, 4) + postcode.slice(-2);
   }
 
 
@@ -196,6 +213,7 @@ export class HomePage {
         email: "",
         telnr: "",
         straatnaam: "",
+        geslacht: "",
         plaats: ""
       })
     }
