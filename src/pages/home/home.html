@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Home v4</ion-title>
+    <ion-title>Home v7</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -59,7 +59,7 @@
         <ion-input type="text" [(ngModel)]="card.email" (ionChange)="emailComplete(card,$event)"></ion-input>
       </ion-col>
       <ion-col>
-        <ion-input type="text" [(ngModel)]="card.telnr" (ionBlur)="telNrCheck(card)"></ion-input>
+        <ion-input type="text" [(ngModel)]="card.telnr" (ionFocus)="telNrEntry(card)" (ionBlur)="telNrCheck(card)"></ion-input>
       </ion-col>
       <ion-col>
         <ion-input type="text" [(ngModel)]="card.straatnaam" (ionBlur)="saveStuff()"></ion-input>

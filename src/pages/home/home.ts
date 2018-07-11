@@ -82,7 +82,16 @@ export class HomePage {
     if (card['initialen'].length == 1) card['initialen'] += '.';
   }
 
+  telNrEntry(card) {
+    if (card['telnr'] == '') card['telnr'] = '06-';
+  }
+
   telNrCheck(card) {
+    if (card['telnr'] == '06-') card['telnr'] = '';
+   
+    if (card['telnr'].substring(0, 5) == '06-0')
+      card['telnr'] = card['telnr'].substring(3, 1000);
+
     let telnr = card['telnr'];
     if (telnr.substring(0, 2) == "06")
       if (telnr.charAt(2) != '-')
@@ -126,6 +135,8 @@ export class HomePage {
       { e: '@hotm', d: '@hotmail.com' },
       { e: '@quic', d: '@quicknet.nl' },
       { e: '@liv', d: '@live.nl' },
+      { e: '@kpn', d: '@kpnplanet.nl' },
+      { e: '@upc', d: '@upcmail.nl' },
       { e: '@outl', d: '@outook.com' }
     ]
 
@@ -150,7 +161,7 @@ export class HomePage {
     let number = card['huisnummer']
     let url = "https://api.postcodeapi.nu/v2/addresses/?postcode=" + postcode + "&number=" + number;
 
-    if (postcode != "")
+    if (postcode != "" && card['plaats'] == "")
       this.http.get(url, new RequestOptions({ headers: headers }))
         .map(res => res.json())
         .map(res => res['_embedded'])
