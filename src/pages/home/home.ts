@@ -67,7 +67,7 @@ export class HomePage {
       }
     })
   }
-// Simple tool to enter Dutch data and lookup postal codes using postcode api (postcodeapi.nu)
+
   voornaamChange(voornaam, card) {
     if (voornaam.length > 0) {
       card.initialen = voornaam.charAt(0) + '.';
