@@ -33,7 +33,7 @@
       <ion-col>Email</ion-col>
       <ion-col>Telnr</ion-col>
       <ion-col>Straat</ion-col>
-      <ion-col>Telnr</ion-col>
+      <ion-col>Plaats</ion-col>
     </ion-row>
     <ion-row *ngFor="let card of cards;let i=index">
       <ion-col>{{i+1}}</ion-col>
@@ -65,7 +65,7 @@
         <ion-input type="text" [(ngModel)]="card.straatnaam" (ionBlur)="saveStuff()"></ion-input>
       </ion-col>
       <ion-col>
-        <ion-input type="text" [(ngModel)]="card.plaats"></ion-input>
+        <ion-input type="text" [(ngModel)]="card.plaats" (ionFocus)="plaatsEntry(card,i)"></ion-input>
       </ion-col>
     </ion-row>
   </ion-grid>
