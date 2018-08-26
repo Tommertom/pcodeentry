@@ -149,6 +149,8 @@ export class HomePage {
 
     let emails: Array<emailMatch> = [
       { e: '@gma', d: '@gmail.com' },
+      { e: '@hom', d: '@home.nl' },
+      { e: '@zig', d: '@ziggo.nl' },
       { e: '@hetn', d: '@hetnet.nl' },
       { e: '@hotm', d: '@hotmail.com' },
       { e: '@quic', d: '@quicknet.nl' },
@@ -185,7 +187,7 @@ export class HomePage {
     let number = card.huisnummer
     let url = "https://api.postcodeapi.nu/v2/addresses/?postcode=" + postcode + "&number=" + number;
 
-    if (postcode != "" && card.plaats == "")
+    if (postcode.length==6 && postcode != "" && card.plaats == "")
       this.http.get(url, new RequestOptions({ headers: headers }))
         .map(res => res.json())
         .map(res => res['_embedded'])
